@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="">
+<head>
+    <style>
+        img{
+            display: none;
+        }
+        img.show{
+            display: block;
+        }
+        .a1{
+            background-color: red;
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+        .a1.hide{
+            background-color: yellow;
+            width: 100px;
+        }
+        .mask{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0, 0.2);
+            left: 0;
+            top: 0;
+            z-index: -1;
+        }
+        .mask.hide{
+            display: none;
+        }
+        .a1>.text{
+            display: none;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
+        .a1:hover>.text{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    11111111</br>
+    11111111
+        <div class="a1">
+            <div class="text">
+                <img class="" src="src/assets/jolyne.jpg">
+                <img class="show" src="src/assets/jolyne.jpg">
+                <img src="src/assets/jolyne.jpg">
+                <img src="src/assets/jolyne.jpg">
+                <img src="src/assets/jolyne.jpg">
+
+            </div>
+        </div>
+        <button id="change">111</button>
+        <div class="mask "></div>
+        <!-- <div class="hide">11</div> -->
+    </body>
+    <script>
+        var a = 0;
+        var a1 = document.getElementsByClassName("a1")[0];
+        var mask = document.getElementsByClassName("mask")[0];
+        var change = document.getElementById("change");
+        function showMenu(){
+            if(a == 0){
+                a1.setAttribute("class","a1 hide");
+                mask.setAttribute("class","mask hide")
+                a=1;
+            }else{
+                a1.setAttribute("class","a1");
+                mask.setAttribute("class","mask")
+                a=0;
+            }
+            
+        }
+        change.onclick =function(){
+            showMenu();
+        } 
+        mask.onclick = function(){
+            showMenu();
+        }
+
+    </script>
+</html>

@@ -1,0 +1,33 @@
+{"nodes":
+	[	
+		{"name":"乔纳森·乔斯达","group":0,"image":"jonathan.jpg","color":"#191970"},
+		{"name":"乔瑟夫·乔斯达","group":1,"image":"joseph.jpg","color":"#FF4500"},
+		{"name":"空条承太郎","group":2,"image":"jotaro.jpg","color":"#FF0033"},
+		{"name":"东方仗助","group":3,"image":"josuke.jpg","color":"#663366"},
+		{"name":"乔鲁诺·乔巴拿","group":4,"image":"giorno.jpg","color":"#FFCC00"},
+		{"name":"空条徐伦","group":5,"image":"jolyne.jpg","color":"#006400"},
+		{"name":"乔尼·乔斯达","group":6,"image":"johnny.jpg","color":"#00BFFF"},
+		{"name":"东方定助","group":7,"image":"josuke parallel.jpg","color":"#FF1493"},
+		{"name":"迪奥·布兰度","group":8,"image":"dio.jpg","color":"black"},
+		{"name":"恩里克·普奇","group":9,"image":"puqi.jpg","color":"#4B0082"}
+    ],
+"links":
+	[
+		{"source":0,"target":1,"value":"爷孙"},
+		{"source":0,"target":1,"value":"爷孙"},
+		{"source":6,"target":0,"value":"平行世界"},
+		{"source":8,"target":0,"value":"宿敌/占据身体"},
+		{"source":1,"target":2,"value":"爷孙"},
+		{"source":1,"target":3,"value":"私生子"},
+		{"source":2,"target":3,"value":"战友"},
+		{"source":2,"target":8,"value":"宿敌/击败"},
+		{"source":2,"target":4,"value":"调查"},
+		{"source":2,"target":5,"value":"父女"},
+		{"source":4,"target":8,"value":"父子"},
+		{"source":7,"target":2,"value":"平行世界"},
+		{"source":6,"target":7,"value":"乔斯达血脉"},
+		{"source":9,"target":2,"value":"杀害"},
+		{"source":9,"target":5,"value":"死敌/杀害"},
+		{"source":9,"target":8,"value":"崇拜"}
+	]
+}

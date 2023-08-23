@@ -1,0 +1,182 @@
+<html>  
+    <head>  
+        <meta charset="utf-8">  
+        <title>Canvas图像处理</title>  
+		<style>
+            body{
+                background-color: #f5f5dca7;
+                
+            }
+            .selection{
+                text-align: center;
+            }
+            #myCanvas{
+                position:absolute;
+                left:28%;
+            }
+            #mysvg{
+                position:absolute;
+                left:28%;
+            }
+		</style>
+    </head> 
+	<body>
+        <p style="font-size:50px;text-align: center;">基于Canvas的图像处理</p>
+        <div class="selection">
+            
+            <input type="button" id="R" value="红色提取">
+            <input type="button" id="G" value="绿色提取">
+            <input type="button" id="B" value="蓝色提取">
+            <input type="button" id="grey" value="灰度图">
+            <input type="button" id="contours" value="灰度等高线图">
+        </div>
+
+        <canvas id="myCanvas" width="650" height="480"></canvas>
+        <div id="mysvg"></div>
+		<script src="./d3.min.js" charset="utf-8"></script> 
+        <script src="https://www.lactame.com/lib/ml/6.0.0/ml.min.js"></script>
+		<script>
+            var w=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+            var h=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
+
+            var c=document.getElementById("myCanvas");
+
+            var cxt=c.getContext("2d");
+
+            var img=new Image()
+            img.src="ba.png"
+            cxt.moveTo(200,0)
+            cxt.drawImage(img,0,0);
+            var imageData=cxt.getImageData(0,0,c.width,c.height);
+            var imageData_sourc=cxt.getImageData(0,0,c.width,c.height);
+            var idata=imageData.data;
+         
+
+            var greydata=new Array(c.height*c.width);
+            var DM=new Array(c.height);
+            var datargb=new Array(c.height*c.width);
+
+            for(var i=0;i<c.height;i++){
+                DM[i]=new Array(c.width);
+                for(var j=0;j<c.width;j++){
+
+                    
+                    DM[i][j]=new Array(4)
+                    DM[i][j][0]=idata[(i*c.width+j)*4]
+                    DM[i][j][1]=idata[(i*c.width+j)*4+1]
+                    DM[i][j][2]=idata[(i*c.width+j)*4+2]
+                    DM[i][j][3]=idata[(i*c.width+j)*4+3]
+
+                    datargb[i*c.width+j]=new Array(3);
+                    datargb[i*c.width+j][0]=idata[(i*c.width+j)*4]
+                    datargb[i*c.width+j][1]=idata[(i*c.width+j)*4+1]
+                    datargb[i*c.width+j][2]=idata[(i*c.width+j)*4+2]
+
+                    greydata[i*c.width+j]=idata[(i*c.width+j)*4]*0.299 + idata[(i*c.width+j)*4+1]*0.587 + idata[(i*c.width+j)*4+2]*0.114;
+                }
+            }
+
+
+
+            function drawgrey(){
+                d3.selectAll("svg").remove();
+                cxt.clearRect(0,0,650,480);
+                var svg=d3.select("#mysvg")
+                        .append("svg")
+                        .attr("width",c.width)
+                        .attr("height",c.height);
+                var thresholds=d3.range(0,17).map(d=>d*8);
+
+
+
+                var contours=d3.contours()
+                    .size([c.width,c.height])
+                    .thresholds(thresholds)
+
+                var contourdata=contours(greydata);
+                console.log(contourdata)
+                var colorScale=d3.scaleLinear()
+                    .domain([0,64])
+                    .range(['#fffbd5','#fffbd5']);
+                
+                var myPath=d3.geoPath();
+
+
+                svg.selectAll('path')
+                    .data(contourdata)
+                    .enter()
+                    .append('path')
+                    .attr('d',d3.geoPath())
+                    .attr('fill',d=>colorScale(d.value))
+                    .attr('stroke',"red")
+            
+
+            }
+            function filterR(){
+              
+                for(var i=0; i<c.width*c.height; i++){
+                    //idata[4*i+0] = 0;  //r
+                    idata[4*i+1] = 0; //g
+                    idata[4*i+2] = 0;  //b
+                }
+                cxt.putImageData(imageData,0,0,0,0,c.width,c.height); 
+            }
+            function filterG(){
+              
+                for(var i=0; i<c.width*c.height; i++){
+                    idata[4*i+0] = 0;  //r
+                    // idata[4*i+1] = 0; //g
+                    idata[4*i+2] = 0;  //b
+                }
+                cxt.putImageData(imageData,0,0,0,0,c.width,c.height); 
+            }
+            function filterB(){
+              
+                for(var i=0; i<c.width*c.height; i++){
+                    idata[4*i+0] = 0;  //r
+                    idata[4*i+1] = 0; //g
+                    //idata[4*i+2] = 0;  //b
+                }
+                cxt.putImageData(imageData,0,0,0,0,c.width,c.height); 
+            }
+            function greyEffect(){//灰度
+                
+                for(var i=0; i<c.width*c.height; i++){
+                    var r = idata[4*i+0];
+                    var g = idata[4*i+1];
+                    var b = idata[4*i+2];
+                    
+                    var grey = r*0.299 + g*0.587 + b*0.114;
+                    
+                    idata[4*i+0] = grey;
+                    idata[4*i+1] = grey;
+                    idata[4*i+2] = grey;
+                }
+                cxt.putImageData(imageData,0,0,0,0,c.width,c.height); 
+            }
+
+            var hr=document.getElementById("R");
+            var hg=document.getElementById("G");
+            var hb=document.getElementById("B");
+            var hg=document.getElementById("grey");
+            var hc=document.getElementById("contours");
+
+            hr.onclick=function(){
+                filterR();
+            }
+            hg.onclick=function(){
+                filterG();
+            }
+            hb.onclick=function(){
+                filterB();
+            }
+            hg.onclick=function(){
+                greyEffect();
+            }
+            hc.onclick=function(){
+                drawgrey();
+            }
+            
+		</script>	
+    </body>  
+</html>  

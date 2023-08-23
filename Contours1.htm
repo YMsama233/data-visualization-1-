@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="
+	width=device-width, initial-scale=1.0">
+
+	<script type="text/javascript"
+	src="d3.min.js">
+	</script>
+
+</head>
+<body>
+	<h1 style="color:#cc5333;text-align:center;">动态随机密度估计</h1>
+	<div id="container" style="text-align:center;">
+	<script>
+        var width=window.screen.width;
+        var height=window.screen.height; 
+
+		// append the svg object to the body.
+		var svg = d3.select("#container")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("transform","translate("+width/3+","+50+")")
+                    
+		// Read data
+        d3.csv("./data.csv").then(function(data) {
+            
+			var y = d3.scaleLinear()
+                      .domain([0, 100])
+                      .range([0,1145]);
+                      
+            var color=d3.schemeTableau10;
+			var x = d3.scaleLinear()
+                      .domain([0, 60])
+                      .range([0, 1419]);
+            
+            var densityData = d3.contourDensity()
+                                    .y(d=>y(d.y))
+                                    .x(d=>x(d.x));
+            ddata=densityData(data);
+            console.log(ddata);
+            var paths=svg.selectAll("path")
+                    .data(ddata)
+                    .enter()
+                    .append("path")
+                    .attr("d", d3.geoPath())
+                    .attr("fill", (d,i)=>color[i%10])
+                    .attr("stroke", "green")
+                    .attr("opacity","1")
+                      
+            function updateData(){
+                
+                ddata=densityData(data);
+                //console.log(ddata);
+                paths.data(ddata)
+                        .transition()
+                        .duration(190)
+                        .attr("d", d3.geoPath());
+                svg.selectAll("circle")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", d=>x(d.x))
+                        .attr("cy", d=>y(d.y))
+                        .attr("r",4)
+                        .attr("fill", "blue")
+                        .attr("stroke", "red");
+            }
+            updateData();
+
+            function update(i){	
+                var x1=5+Math.random()*10;
+                var y1=15+Math.random()*10;
+                dataitem={x:x1.toString(),y:y1.toString(),group:'H'};
+                data.push(dataitem);
+                console.log(data);
+                updateData();
+            }
+            var index=0;
+            setInterval(()=> update((++index) % data.length), 2000);
+		});
+	</script>
+</body>
+</html>

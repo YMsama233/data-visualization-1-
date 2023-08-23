@@ -1,0 +1,120 @@
+
+<html>
+    <head>
+     <meta charset="utf-8">
+        <title>
+        音乐可视化
+        </title>
+        <style>
+            .title{
+                color:rgb(30, 6, 53);
+                font-size:46px;
+                stroke: black;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 0px;
+            }
+            .name{
+                position: absolute;
+                color:rgb(30, 6, 53);
+                font-size:30px;
+                stroke:aquamarine;
+                text-align: right;
+                right:10%;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            .back{
+                position: absolute;
+                background-image: url(bof.png);
+                background-size: contain;
+            }
+            .player{
+                top:20%;
+                right:5%;
+                position: absolute;
+                z-index: 1;
+            }
+          
+        </style>
+    </head>
+   <body>
+        <div class="back">
+            <h1 class="title">《表参道26時》</h1>
+            <h2 class="name">—サカナクション</h2>
+            <div id="mysvg"></div>
+        </div>
+        <div class="player">
+            <audio id="audioElement" src="./music/26.mp3" controls="controls"></audio>
+        </div>
+        <script src="./d3.min.js" charset="utf-8"></script> 
+        <script>
+    
+        var w=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth*0.6;
+        var h=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight*0.7;
+
+        var svg=d3.select("#mysvg")
+                .append("svg")
+                .attr("width",w)
+                .attr("height",h);
+        
+        var innerR=50;
+        var dataset=new Array(100);
+        for(var i=0;i<dataset.length;i++){
+            dataset[i]=new Array();
+            dataset[i][0]=120;
+            dataset[i][1]=100+Math.floor(Math.random()*(255-100));
+        }
+        var pie =d3.pie().value(function(d){return d[0]})
+        var arcPath=d3.arc().innerRadius(innerR);
+        
+
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var audioElement = document.getElementById('audioElement');
+        var audioSrc = audioCtx.createMediaElementSource(audioElement);//这是一个音频源节点的参数，它的上下文为AudioContext，
+        var analyser = audioCtx.createAnalyser();
+        audioSrc.connect(analyser);
+        audioSrc.connect(audioCtx.destination);
+
+
+        var frequencyData = new Uint8Array(100);//8 位无符号整数值的类型化数组。创建长度为100的
+        console.log(frequencyData)
+        piedata=pie(dataset);
+        console.log(piedata)
+        var arcs=svg.selectAll("path")
+                .data(piedata)
+                .enter()
+                .append("path")
+                .attr("transform","translate("+w/2+","+h/2+")")
+                .attr("fill",function(d,i){
+                    return 'rgb(0,'+(dataset[i][1])+','+dataset[i][1]+')';
+                })
+                .attr("stroke","black")
+                .attr("d",function(d,i){
+                    arcPath.outerRadius(dataset[i][1]);
+                    return arcPath(d);   //起止角度(内外半径)——>路径的参数
+                  });
+
+        console.log(arcs)
+        
+        function renderChart(){
+            requestAnimationFrame(renderChart);
+            analyser.getByteFrequencyData(frequencyData);
+            
+            svg.selectAll('path')
+                .data(pie(dataset))
+                .attr("fill",function(d,i){
+                    return 'rgb(150,'+frequencyData[i]+','+((255-frequencyData[i])*0.4)+')'
+                })
+                .attr("d",function(d,i){
+                    arcPath.outerRadius(frequencyData[i]+innerR);
+                    return arcPath(d);
+                })
+        }
+        
+        
+        
+        renderChart();
+   </script>
+  </body>
+</html>

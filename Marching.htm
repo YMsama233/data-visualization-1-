@@ -1,0 +1,91 @@
+<html>
+    <body>
+        <script src="d3.min.js"></script>
+        <title>
+            D3Hist
+        </title>
+        <body>
+            
+        <script>
+            var w=window.screen.width;
+            var h=window.screen.height; 
+            var svg=d3.select("body")
+                .append("svg")
+                .attr("width",w)
+                .attr("height",h);
+
+            function himme(x,y){
+                return ((x*x+y-11)*(x*x+y-11)+(x+y*y-8)*(x+y*y-8))
+            }
+            var n=1024;
+            var m=768;
+            var k=0;
+            var values= new Array(n*m)
+            for (var j=0;j<m;++j){
+                for(var i=0;i<n;++i){
+                    var x=i/(n-1)*10-5;
+                    var y=j/(m-1)*10-5;
+                    values[k]=himme(x,y);
+                    ++k;
+                }
+            }
+            console.log(values)
+            var thresholds=d3.range(0,10).map(d=>d*8);
+            console.log(thresholds)
+            var contours=d3.contours()
+                .size([n,m])
+                .thresholds(thresholds)
+            
+            var contourdata=contours(values);
+            console.log(contourdata)
+            var colorScale=d3.scaleLinear()
+                .domain([0,64])
+                .range(['#b20a2c','#fffbd5']);
+            
+            var myPath=d3.geoPath();
+            var tooltip = d3.select("body").append("div")
+                    .attr("class","tooltip") //用于css设置类样式
+                    .attr("opacity",0.0);
+
+
+            svg.selectAll('path')
+                .data(contourdata)
+                .enter()
+                .append('path')
+                .attr('d',d3.geoPath())
+                .attr('fill',d=>colorScale(d.value))
+                .attr('stroke',"red")
+                .on("mouseover",function(d)
+                    {   
+                        mydata=d3.select(this)
+                        
+                        myvalue=mydata._groups[0][0].__data__.value
+
+                        var x1 =event.pageX;
+                        var y1 =event.pageY+20;
+                        //添加标签
+                        svg.append("text")
+                            .attr("id","tooltip")    				
+                            .attr("x",x1)
+                            .attr("y",y1) 
+                            .attr("text-anchor","middle")  
+                            .attr("font-family","sans-setif")  
+                            .attr("font-size","20px")  
+                            .attr("font-weight","bold")  
+                            .attr("fill","white")  
+                            .attr("stroke","black")
+                            //文本内容
+                            .text(myvalue); 							
+                    
+                    })
+                    //鼠标移出时通过ID移除标签
+                    .on("mouseout",function(d)
+                    {
+                        d3.select("#tooltip").remove();
+                    });  
+
+
+            
+        </script>
+    </body>
+</html>

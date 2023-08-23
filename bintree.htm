@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>
+            Java BinTree
+        </title>
+        <body>
+            <h2><center>二叉树绘制</center>
+                <div id="name" style="text-align:right">
+                    <b>20数科张劲涛</b>
+                </div>
+            </h2>
+            <svg id="svg01" width="800" height="600">
+                
+            </svg>
+            <script>
+                var w=window.screen.width;
+                var h=window.screen.height;
+                w=w*0.98;
+                h=h*0.7;
+                var svg=document.getElementById("svg01");
+                svg.setAttribute("width",w);
+                svg.setAttribute("height",h);
+                var L=200;
+                var rate=0.6;
+                var x0=w/2;
+                var y0=h;
+                var a=-Math.PI/2;
+                count=9;
+                function show(x0,y0,L,rate,a,count){
+                    var x1=x0;
+                    var y1=y0;
+                    var x2=x1+L*Math.cos(a);
+                    var y2=y1+L*Math.sin(a);
+                    var aL=a-Math.PI/5;
+                    var aR=a+Math.PI/5;
+                    var lineX=document.createElement("line");
+                    svg.appendChild(lineX);
+                    lineX.outerHTML="<line x1="+x1+" y1="+y1+" x2="+x2+" y2="+y2+" stroke='rgb("+((255-255*(count/7))/2)+","+((255-255*(count/7))*1.5)+","+((255-255*(count/7))/2)+")'/>";
+                    if(count>0){
+                        show(x2,y2,L*rate,rate,aL,count-1);
+                        show(x2,y2,L*rate,rate,aR,count-1);
+                    }
+
+                }
+                show(x0,y0,L,rate,a,count);
+            </script>
+        </body>
+    </head>
+</html>

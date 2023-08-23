@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>
+            Java BinTree random
+        </title>
+        <body>
+            <h2>
+                <center>文字树绘制</center>
+                <div id="name" style="text-align:right">
+                    <b>20数科张劲涛</b>
+                </div>
+            </h2>
+            <svg id="svg01" width="800" height="600">
+                
+            </svg>
+
+            <script>
+                var w=window.screen.width;
+                var h=window.screen.height;
+                w=w*0.98;
+                h=h*0.8;
+                var svg=document.getElementById("svg01");
+                svg.setAttribute("width",w);
+                svg.setAttribute("height",h);
+                var L=200;
+                var rate=0.8;
+                var x0=w/2;
+                var y0=h;
+                var a=-Math.PI/2;
+                count=9;
+                var str="中国传媒大学";
+                function show(x0,y0,L,rate,a,count){
+                    var fontsize=count*2.5;
+                    var L=str.length*fontsize;
+                    var x1=x0;
+                    var y1=y0;
+                    var x2=x1+L*Math.cos(a);
+                    var y2=y1+L*Math.sin(a);
+
+                    var aL=a-Math.PI/5*(0.5+Math.random()/2);
+                    var aR=a+Math.PI/5*(0.5+Math.random()/2);
+                    var words=document.createElement("text")
+                    svg.appendChild(words);
+                    words.outerHTML="<text x="+x1+" y="+y1+" transform='rotate("+a*180/Math.PI+","+x1+","+y1+")' fill='#e1cbff' stroke='black' stroke-width='0.5' font-size="+fontsize+">"+str+"</text>";
+                    if(count>0){
+                        show(x2,y2,L,rate,aL,count-1);
+                        show(x2,y2,L,rate,aR,count-1);
+                        if(count==1)
+                        {
+                            var apple=document.createElement("circle");
+                            svg.appendChild(apple);
+                            apple.outerHTML="<circle cx="+x2+" cy="+y2+" r="+8*Math.random()+" fill='rgb("+(255*(0.5+0.5*Math.random()))+","+(155*Math.random())+","+(155*Math.random())+")' stroke='pink' stroke-width='1'>"
+                        }
+                    }
+
+                }
+                show(x0,y0,L,rate,a,count);
+            </script>
+            
+        </body>
+    </head>
+</html>

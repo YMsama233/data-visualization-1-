@@ -1,0 +1,102 @@
+<html>
+    <body>
+        <script src="d3.min.js"></script>
+        <title>
+            D3Hist
+        </title>
+        <body>
+            
+        <script>
+            var w=window.screen.width;
+            var h=window.screen.height; 
+            var svg=d3.select("body")
+                .append("svg")
+                .attr("width",w)
+                .attr("height",h);
+
+            var g=svg.append("g")
+                    .attr("transform","translate("+100+","+100+")")
+                    .attr("width",w)
+                    .attr("height",h);
+            
+            d3.csv("./data.csv").then(function(data){
+                console.log(data)
+                var max=d3.max(data);
+                var min=d3.min(data);
+
+                console.log(max)
+                console.log(min)
+
+                var y=d3.scaleLinear()
+                    .domain([10,25])
+                    .range([10,800])
+                    console.log(y(data[2].y));
+                var color=d3.schemeCategory10;
+
+                var x=d3.scaleLinear()
+                    .domain([10,25])
+                    .range([10,1000])
+                
+                var densityData=d3.contourDensity()
+                    .y(d=>y(d.y))
+                    .x(d=>x(d.x));
+
+                var tooltip = d3.select("body").append("div")
+                    .attr("class","tooltip") //用于css设置类样式
+                    .attr("opacity",0.0);
+
+                var ddata=densityData(data);
+                console.log(ddata)
+                g.selectAll("path")
+                    .data(ddata)
+                    .enter()
+                    .append("path")
+                    .attr("d",d3.geoPath())
+                    .attr("fill",(d,i)=>color[i%10])
+                    .attr("stroke","green")
+                    .attr("opacity","1")
+
+                g.selectAll("circle")
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", d=>x(d.x))
+                    .attr("cy", d=>y(d.y))
+                    .attr("r",5)
+                    .attr("fill","blue")
+                    .attr("stroke","red")
+                    .on("mouseover",function(d)
+                    {   
+                        mydata=d3.select(this)
+                        datax=mydata._groups[0][0].__data__.x
+                        datay=mydata._groups[0][0].__data__.y
+
+                        var x1 =event.pageX;
+                        var y1 =event.pageY+20;
+                        //添加标签
+                        svg.append("text")
+                            .attr("id","tooltip")    				
+                            .attr("x",x1)
+                            .attr("y",y1) 
+                            .attr("text-anchor","middle")  
+                            .attr("font-family","sans-setif")  
+                            .attr("font-size","20px")  
+                            .attr("font-weight","bold")  
+                            .attr("fill","white")  
+                            .attr("stroke","black")
+                            //文本内容
+                            .text("x:"+datax+"   "+"Y:"+datay); 							
+                    
+                    })
+                    //鼠标移出时通过ID移除标签
+                    .on("mouseout",function(d)
+                    {
+                        d3.select("#tooltip").remove();
+                    });  
+
+
+              
+            })
+        </script>
+    </body>
+</html>

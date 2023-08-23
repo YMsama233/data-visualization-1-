@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>
+            Java直方图
+        </title>
+        <body>
+            <h2><center>FF14绝欧米伽前十队伍职业统计</center></h2>
+            <svg id="svg01" width="800" height="600">
+                
+            </svg>
+            <script>
+                var w=window.screen.width;
+                var h=window.screen.height;
+                w=w*0.98;
+                h=h*0.8;
+                var svg=document.getElementById("svg01");
+                svg.setAttribute("width",w);
+                svg.setAttribute("height",h);
+                
+                var rec=new Array();
+                var txt1=new Array();
+                var txt2=new Array();
+                var data1=new Array(10,8,6,6,6,5,5,5,4,4,4,4,4,3,3,2,1);
+                var data2=new Array('黑骑','忍者','学者','白魔','召唤','绝枪','舞者','机工','镰刀','占星','武僧','贤者','龙骑','黑魔','骑士','战士','赤魔');
+                var color=[[8,46,84],[106,90,205],[0,255,127],[255,235,215],[255,0,255],[30,144,255],[255,0,0],[255,255,0],[153,51,250],[51,161,201],[210,105,30],[0,201,87],[61,89,171],[94,38,18],[0,0,255],[255,97,0],[192,192,192]]
+                for(var i=0;i<17;i++){
+                    rec[i]=document.createElement("rect");
+                    txt1[i]=document.createElement("text");
+                    txt2[i]=document.createElement("text");
+                    svg.appendChild(rec[i]);
+                    svg.appendChild(txt1[i]);
+                    svg.appendChild(txt2[i]);
+                    var r = Math.floor(Math.random() * 255);
+                    var g = Math.floor(Math.random() * 255);
+                    var b = Math.floor(Math.random() * 255);
+                    rec[i].outerHTML="<rect x=100 y="+(h*i/17)+" width="+(data1[i]*(w/10-30))+" height="+(h/17-3)+" fill='rgb("+color[i][0]+","+color[i][1]+","+color[i][2]+")'>"
+                    txt1[i].outerHTML="<text x="+(data1[i]*(w/10-30)+120)+" y="+(h*i/17+(h/17-3)/2)+" fill=black>"+data1[i]+"</text>" 
+                    txt2[i].outerHTML="<text x=50 y="+(h*i/17+(h/17-3)/2)+" fill=black>"+data2[i]+"</text>" 
+                }
+            </script>
+        </body>
+    </head>
+</html>

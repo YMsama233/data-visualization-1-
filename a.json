@@ -1,0 +1,41 @@
+{"nodes":
+	[	
+		{"name":"乔纳森·乔斯达","group":0},
+		{"name":"艾莉娜·乔斯达","group":1},
+		{"name":"迪奥·布兰度","group":2},
+		{"name":"威尔·A·齐贝林","group":3},
+		{"name":"史比特瓦根","group":4},
+		{"name":"乔瑟夫·乔斯达","group":5},
+		{"name":"荷莉・乔斯达","group":6},
+		{"name":"东方仗助","group":7},
+		{"name":"空条承太郎","group":8},
+		{"name":"空条徐伦","group":9},
+		{"name":"乔尼·乔斯达","group":10},
+		{"name":"东方朋子","group":11},
+		{"name":"乔鲁诺·乔巴拿","group":12},
+		{"name":"西撒·安德里欧·齐贝林","group":13}
+    ],
+"links":
+	[
+		{"source":0,"target":1,"value":"夫妻","color":"pink"},
+		{"source":0,"target":2,"value":"宿敌","color":"red"},
+		{"source":0,"target":3,"value":"师徒","color":"gray"},
+		{"source":0,"target":4,"value":"挚友","color":"orange"},
+		{"source":0,"target":5,"value":"孙子","color":"blue"},
+		{"source":0,"target":10,"value":"平行世界","color":"black"},
+		{"source":2,"target":8,"value":"宿敌","color":"red"},
+		{"source":2,"target":12,"value":"父子","color":"brown"},
+		{"source":2,"target":12,"value":"父子","color":"brown"},
+		{"source":3,"target":13,"value":"孙子","color":"blue"},
+		{"source":5,"target":6,"value":"父女","color":"brown"},
+		{"source":5,"target":7,"value":"私生子","color":"brown"},
+		{"source":5,"target":11,"value":"情人","color":"pink"},
+		{"source":5,"target":13,"value":"挚友/战友","color":"orange"},
+		{"source":5,"target":8,"value":"孙子/战友","color":"blue"},
+		{"source":6,"target":8,"value":"母子","color":"brown"},
+		{"source":7,"target":11,"value":"母子","color":"brown"},
+		{"source":7,"target":8,"value":"战友","color":"orange"},
+		{"source":8,"target":9,"value":"父女/战友","color":"brown"},
+		{"source":8,"target":12,"value":"调查","color":"green"}
+	]
+}

@@ -1,0 +1,115 @@
+<body>
+    <h1><center>FF14绝欧米伽近战职业统计</center></h1>
+    <script src="./d3.min.js"></script>
+    <script>
+        var width=(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)*0.96;
+        var height=(window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight)*0.9;	
+    
+        const data = [
+            {year: 1,  entities: [{name:"武僧", value: 1}, {name:"忍者", value:1}, {name:"龙骑", value:0}, {name:"武士", value:0} , {name:"钐镰", value:0}]},
+            {year: 5,  entities: [{name:"武僧", value: 3}, {name:"忍者", value:4}, {name:"龙骑", value:1}, {name:"武士", value:0} , {name:"钐镰", value:2}]},
+            {year: 10,  entities: [{name:"武僧", value: 4}, {name:"忍者", value:8}, {name:"龙骑", value:4}, {name:"武士", value:0} , {name:"钐镰", value:4}]},
+            {year: 15,  entities: [{name:"武僧", value: 8}, {name:"忍者", value:11}, {name:"龙骑", value:5}, {name:"武士", value:0} , {name:"钐镰", value:6}]},
+            {year: 20,  entities: [{name:"武僧", value: 11}, {name:"忍者", value:15}, {name:"龙骑", value:6}, {name:"武士", value:1} , {name:"钐镰", value:6}]},
+            {year: 30,  entities: [{name:"武僧", value: 14}, {name:"忍者", value:20}, {name:"龙骑", value:12}, {name:"武士", value:5} , {name:"钐镰", value:8}]},
+            {year: 40,  entities: [{name:"武僧", value: 15}, {name:"忍者", value:26}, {name:"龙骑", value:18}, {name:"武士", value:6} , {name:"钐镰", value:13}]},
+            {year: 50,  entities: [{name:"武僧", value: 20}, {name:"忍者", value:32}, {name:"龙骑", value:22}, {name:"武士", value:11} , {name:"钐镰", value:13}]}
+        ];
+        
+            
+        const rect = {height: 40};
+        
+        var svg = d3.select("body")			
+                    .append("svg")			
+                    .attr("width",width*0.8)	
+                    .attr("height",height)
+                    .attr("transform","translate("+100+","+50+")")
+                    
+                      
+        var scale = d3.scaleLinear()
+                        .domain([0, 120])
+                        .range([10, width*0.9]);
+           
+           
+        var index = 0;
+        var dataEntry = data[index];
+        var dataValue = dataEntry["entities"].sort((x, y) => y.value - x.value);
+    
+            
+        const maxHeight = (rect.height) * (dataValue.length)
+           
+        var comment = svg.append("text")
+                        .attr("x", width*0.6)
+                        .attr("y", maxHeight+50)
+                        .attr("fill", "grey")
+                        .attr("font-size", "40")
+
+                        .text("截止前"+dataEntry.year+"通过");
+
+        var color=d3.schemeCategory10; 
+        
+        var rects= svg.selectAll("rect")
+                        .data(dataValue)
+                        .enter()
+                        .append("rect")
+                        .attr("x", 60)
+                        .attr("height", rect.height)
+                        .attr("fill", (d,i)=>color[i%10]);
+        
+        var text1= svg.selectAll("text1")
+                    .data(dataValue)
+                    .enter()
+                    .append("text")
+                    .attr("y", (_, i) => rect.height*i+25)
+                
+                    .attr("fill","black")
+                    .attr("font-size", "20")
+                    .text(function(d){return d.name});
+
+        var text2= svg.selectAll("text2")
+                    .data(dataValue)
+                    .enter()
+                    .append("text")
+                   
+                    .attr("x", d => scale(d.value*3))
+                    .attr("y", (_, i) => rect.height*i+25)
+                    .attr("fill","black")
+                    .attr("font-size", "20")
+                    .text(function(d){return d.value});
+        console.log(text1)
+        svg.append("g")
+               .attr("transform", `translate(0, ${maxHeight + rect.height})`);
+        
+        function updateElements(){
+            rects.data(dataValue, d=>d.name)
+                 .transition()
+                 .duration(1000)
+                 .attr("y", (_, i) => rect.height*i)
+                 .attr("width", d => scale(d.value*3));
+
+            text1.data(dataValue, d=>d.name)
+                .transition()
+                .duration(900)
+                .attr("y", (_, i) => rect.height*i+25);
+
+            text2.data(dataValue, d=>d.name)
+                .transition()
+                .duration(1000)
+                .attr("y", (_, i) => rect.height*i+25)
+                .attr("x", d => scale(d.value*3)+65)
+                .text(function(d){return d.value});
+        }
+        
+        updateElements()
+        
+        function update(i){	
+            dataEntry = data[i];
+            dataValue = dataEntry["entities"].sort((x, y) => y.value - x.value);
+            comment.text("截止前"+dataEntry.year+"通过");
+            updateElements()
+        }
+        
+        setInterval(()=> update((++index) % data.length), 2000);
+        
+    </script>
+    </body>
